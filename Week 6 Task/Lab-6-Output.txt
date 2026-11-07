@@ -1,0 +1,147 @@
+returns words: 210
+refunds words: 205
+delivery words: 191
+warranty words: 180
+account words: 191
+
+============================================================
+TASK 1: Tokens and FAQ chatbot
+============================================================
+Original  : 'Hello, world!'
+Whitespace: ['Hello,', 'world!'] 2
+Word-like : ['Hello', 'world'] 2
+
+Original  : "She doesn't know."
+Whitespace: ['She', "doesn't", 'know.'] 3
+Word-like : ['She', 'doesn', 't', 'know'] 4
+
+Original  : 'support@shop.pk'
+Whitespace: ['support@shop.pk'] 1
+Word-like : ['support', 'shop', 'pk'] 3
+
+Original  : 'Order #A1042 shipped'
+Whitespace: ['Order', '#A1042', 'shipped'] 3
+Word-like : ['Order', 'A1042', 'shipped'] 3
+
+Original  : 'refund_id: RF-2024'
+Whitespace: ['refund_id:', 'RF-2024'] 2
+Word-like : ['refund_id', 'RF', '2024'] 3
+
+Original  : ''
+Whitespace: [] 0
+Word-like : [] 0
+
+Original  : 'آرڈر کب آئے گا'
+Whitespace: ['آرڈر', 'کب', 'آئے', 'گا'] 4
+Word-like : ['آرڈر', 'کب', 'آئے', 'گا'] 4
+
+Model tokenizer: not run (sentence-transformers is not installed here)
+
+--- FAQ chatbot transcript ---
+You: How long is the warranty on electronics?
+Bot: Electronics carry a warranty of 12 months from the purchase date. [source: warranty.txt]
+
+You: refund money
+Bot: Possible matches, please pick one and ask it exactly:
+  How long does a refund take? (similarity 0.327)
+  How long does standard delivery take? (similarity 0.000)
+  Can I return an opened item? (similarity 0.000)
+
+You: 
+Bot: Please type a question.
+
+You: volcano geology
+Bot: No matching FAQ. Please contact the help desk.
+
+Why confirmation: a similarity score is not proof that the FAQ answers the question, so only an exact FAQ question gets its answer shown directly.
+
+============================================================
+TASK 2: Chunking and semantic suggestions
+============================================================
+Boundary tests passed: empty, short, invalid overlap, long sentence (3 parts), offsets match source
+
+strategy    chunks  avg_w  min  max  repeated_w  evidence_in_1_chunk
+window-0        27   36.2    5   40           0  8/8
+window-10       34   37.3   11   40         290  8/8
+sentence        33   29.6    5   40           0  8/8
+
+Sentence splitter failure (abbreviation), delivery document:
+   '250. '
+   'Orders above Rs. '
+   '3000 qualify for free standard delivery. '
+
+Embedding runs skipped: sentence-transformers is not installed in this environment
+[tfidf] How can I get back into my profile?
+    returns:0 score=0.353 chars 0-217: Returns Guide. Thank you for shopping with us. This guide explains how...
+    refunds:0 score=0.140 chars 0-179: Refund Guide. This guide describes how and when money is returned afte...
+    delivery:5 score=0.063 chars 811-952: After the third failed attempt the parcel is returned to the warehouse...
+[tfidf] I received a faulty item, will I get my money back?
+    refunds:4 score=0.259 chars 672-767: Refund of the delivery charge is made only when the item was faulty or...
+    delivery:4 score=0.164 chars 595-810: Remote areas may need 2 extra working days. The courier will call the ...
+    returns:0 score=0.134 chars 0-217: Returns Guide. Thank you for shopping with us. This guide explains how...
+[tfidf] Do you deliver on Sundays?
+    delivery:6 score=0.309 chars 953-1080: Parcels are not delivered on public holidays or on Sundays, and orders...
+    returns:0 score=0.186 chars 0-217: Returns Guide. Thank you for shopping with us. This guide explains how...
+    account:0 score=0.105 chars 0-197: Account Help. This guide helps customers who cannot sign in to their a...
+
+============================================================
+TASK 3: Retrieval evaluation
+============================================================
+window-0   tfidf     dev  Hit@3=1.000 MRR@3=0.833 chunks=27 encode=0.0017s search=0.00050s per query
+window-0   tfidf     test Hit@3=0.500 MRR@3=0.333 chunks=27 encode=0.0017s search=0.00050s per query
+window-10  tfidf     dev  Hit@3=1.000 MRR@3=0.875 chunks=34 encode=0.0018s search=0.00045s per query
+window-10  tfidf     test Hit@3=0.500 MRR@3=0.375 chunks=34 encode=0.0018s search=0.00045s per query
+sentence   tfidf     dev  Hit@3=0.750 MRR@3=0.750 chunks=33 encode=0.0017s search=0.00043s per query
+sentence   tfidf     test Hit@3=0.500 MRR@3=0.375 chunks=33 encode=0.0017s search=0.00043s per query
+retrieval_log.csv saved with 90 rows
+
+Selected on development MRR (tfidf): window-10
+Held-out test result of selected strategy: (0.5, 0.375)
+
+Failures and edge cases (window-10, tfidf):
+  rank 2 'When will my refund reach my bank account?' -> top refunds:4 score 0.207 chars 686 894
+  rank 0 'What should I do if I forgot my login password?' -> top account:4 score 0.203 chars 676 911
+  rank 2 'Can I send back a product I have already opened?' -> top returns:0 score 0.265 chars 0 217
+  rank 0 'How soon will my parcel arrive?' -> top delivery:4 score 0.176 chars 681 906
+  unanswerable: 'Which team won the cricket match yesterday?' -> delivery:2 score 0.199 chars 339 563
+  unanswerable: 'What is the weather in Murree tomorrow?' -> account:1 score 0.344 chars 177 388
+
+--- Document chatbot session (scripted inputs) ---
+Question: How soon will my parcel arrive?
+Candidate evidence (not verified):
+   1 delivery:4 0.176 chars 681 906
+   2 returns:2 0.174 chars 332 572
+   3 delivery:5 0.142 chars 846 1075
+Choice: '1'
+Passage: the order before arriving, and if nobody answers, the courier will try again on the next working day for a maximum of 3 attempts. After the third failed attempt the parcel is returned to the warehouse. Customers can track the
+Source: delivery chars 681 906
+
+Question: Can I send back a product I have already opened?
+Candidate evidence (not verified):
+   1 returns:0 0.265 chars 0 217
+   2 returns:2 0.108 chars 332 572
+   3 warranty:2 0.084 chars 351 566
+Choice: '1'
+Passage: Returns Guide. Thank you for shopping with us. This guide explains how a customer can send an item back after it has been delivered to the address on the order. Unused items can be returned within 14 days of delivery.
+Source: returns chars 0 217
+
+Question: 
+Please type a question.
+
+Question: Which team won the cricket match yesterday?
+Candidate evidence (not verified):
+   1 delivery:2 0.199 chars 339 563
+   2 account:5 0.196 chars 848 1083
+   3 returns:6 0.186 chars 1006 1162
+Choice: ''
+No answer selected. Rephrase or contact a human.
+
+Question: Does the warranty cover water damage?
+Candidate evidence (not verified):
+   1 warranty:1 0.403 chars 189 407
+   2 warranty:0 0.194 chars 0 237
+   3 warranty:3 0.147 chars 509 736
+Choice: '1'
+Passage: order invoice must be shown when a claim is made at any service centre. The warranty does not cover damage caused by water or by repairs made outside our service centres. A product that cannot be repaired in 15 working
+Source: warranty chars 189 407
+
