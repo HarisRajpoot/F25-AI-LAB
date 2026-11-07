@@ -1,0 +1,96 @@
+HEURISTIC AUDIT
+Node   | h | True remaining cost | Admissible
+Gate   | 7 | 9                   | yes
+Lib    | 5 | 8                   | yes
+Lab    | 5 | 6                   | yes
+Cafe   | 5 | 6                   | yes
+Admin  | 2 | 3                   | yes
+Hall   | 3 | 4                   | yes
+Gym    | 6 | cannot reach goal  | yes
+Pool   | 6 | cannot reach goal  | yes
+Hostel | 0 | 0                   | yes
+Edge          | h(u) | cost + h(v) | Consistent
+Gate->Lib     | 7    | 7           | yes
+Gate->Cafe    | 7    | 8           | yes
+Gate->Hall    | 7    | 10          | yes
+Gate->Gym     | 7    | 10          | yes
+Lib->Lab      | 5    | 7           | yes
+Lab->Hostel   | 5    | 6           | yes
+Cafe->Admin   | 5    | 5           | yes
+Admin->Hostel | 2    | 3           | yes
+Hall->Hostel  | 3    | 4           | yes
+Gym->Pool     | 6    | 8           | yes
+
+RUN: A* with given heuristic
+No. | Node   | g | h | f  | Frontier after this step
+1   | Gate   | 0 | 7 | 7  | Lib(g=2,f=7), Cafe(g=3,f=8), Gym(g=4,f=10), Hall(g=7,f=10)
+2   | Lib    | 2 | 5 | 7  | Cafe(g=3,f=8), Lab(g=4,f=9), Gym(g=4,f=10), Hall(g=7,f=10)
+3   | Cafe   | 3 | 5 | 8  | Admin(g=6,f=8), Lab(g=4,f=9), Gym(g=4,f=10), Hall(g=7,f=10)
+4   | Admin  | 6 | 2 | 8  | Lab(g=4,f=9), Hostel(g=9,f=9), Gym(g=4,f=10), Hall(g=7,f=10)
+5   | Lab    | 4 | 5 | 9  | Hostel(g=9,f=9), Gym(g=4,f=10), Hall(g=7,f=10)
+6   | Hostel | 9 | 0 | 9  | goal reached
+Path: Gate -> Cafe -> Admin -> Hostel
+Returned cost: 9 | Cost added by hand: 9
+Processed nodes: ['Gate', 'Lib', 'Cafe', 'Admin', 'Lab', 'Hostel']
+Expanded nodes: ['Gate', 'Lib', 'Cafe', 'Admin', 'Lab']
+Expansion count: 5 | Stale entries skipped: 0
+
+RUN: UCS (all h = 0)
+No. | Node   | g | h | f  | Frontier after this step
+1   | Gate   | 0 | 0 | 0  | Lib(g=2,f=2), Cafe(g=3,f=3), Gym(g=4,f=4), Hall(g=7,f=7)
+2   | Lib    | 2 | 0 | 2  | Cafe(g=3,f=3), Gym(g=4,f=4), Lab(g=4,f=4), Hall(g=7,f=7)
+3   | Cafe   | 3 | 0 | 3  | Gym(g=4,f=4), Lab(g=4,f=4), Admin(g=6,f=6), Hall(g=7,f=7)
+4   | Gym    | 4 | 0 | 4  | Lab(g=4,f=4), Admin(g=6,f=6), Pool(g=6,f=6), Hall(g=7,f=7)
+5   | Lab    | 4 | 0 | 4  | Admin(g=6,f=6), Pool(g=6,f=6), Hall(g=7,f=7), Hostel(g=10,f=10)
+6   | Admin  | 6 | 0 | 6  | Pool(g=6,f=6), Hall(g=7,f=7), Hostel(g=9,f=9)
+7   | Pool   | 6 | 0 | 6  | Hall(g=7,f=7), Hostel(g=9,f=9)
+8   | Hall   | 7 | 0 | 7  | Hostel(g=9,f=9)
+9   | Hostel | 9 | 0 | 9  | goal reached
+Path: Gate -> Cafe -> Admin -> Hostel
+Returned cost: 9 | Cost added by hand: 9
+Processed nodes: ['Gate', 'Lib', 'Cafe', 'Gym', 'Lab', 'Admin', 'Pool', 'Hall', 'Hostel']
+Expanded nodes: ['Gate', 'Lib', 'Cafe', 'Gym', 'Lab', 'Admin', 'Pool', 'Hall']
+Expansion count: 8 | Stale entries skipped: 0
+
+Changed h(Admin) from 2 to 9
+RUN: A* with h(Admin) = 9
+No. | Node   | g | h | f  | Frontier after this step
+1   | Gate   | 0 | 7 | 7  | Lib(g=2,f=7), Cafe(g=3,f=8), Gym(g=4,f=10), Hall(g=7,f=10)
+2   | Lib    | 2 | 5 | 7  | Cafe(g=3,f=8), Lab(g=4,f=9), Gym(g=4,f=10), Hall(g=7,f=10)
+3   | Cafe   | 3 | 5 | 8  | Lab(g=4,f=9), Gym(g=4,f=10), Hall(g=7,f=10), Admin(g=6,f=15)
+4   | Lab    | 4 | 5 | 9  | Gym(g=4,f=10), Hall(g=7,f=10), Hostel(g=10,f=10), Admin(g=6,f=15)
+5   | Gym    | 4 | 6 | 10 | Hall(g=7,f=10), Hostel(g=10,f=10), Pool(g=6,f=12), Admin(g=6,f=15)
+6   | Hall   | 7 | 3 | 10 | Hostel(g=10,f=10), Pool(g=6,f=12), Admin(g=6,f=15)
+7   | Hostel | 10 | 0 | 10 | goal reached
+Path: Gate -> Lib -> Lab -> Hostel
+Returned cost: 10 | Cost added by hand: 10
+Processed nodes: ['Gate', 'Lib', 'Cafe', 'Lab', 'Gym', 'Hall', 'Hostel']
+Expanded nodes: ['Gate', 'Lib', 'Cafe', 'Lab', 'Gym', 'Hall']
+Expansion count: 6 | Stale entries skipped: 0
+
+Changed h(Hall) from 3 to 20
+RUN: A* with h(Hall) = 20
+No. | Node   | g | h | f  | Frontier after this step
+1   | Gate   | 0 | 7 | 7  | Lib(g=2,f=7), Cafe(g=3,f=8), Gym(g=4,f=10), Hall(g=7,f=27)
+2   | Lib    | 2 | 5 | 7  | Cafe(g=3,f=8), Lab(g=4,f=9), Gym(g=4,f=10), Hall(g=7,f=27)
+3   | Cafe   | 3 | 5 | 8  | Admin(g=6,f=8), Lab(g=4,f=9), Gym(g=4,f=10), Hall(g=7,f=27)
+4   | Admin  | 6 | 2 | 8  | Lab(g=4,f=9), Hostel(g=9,f=9), Gym(g=4,f=10), Hall(g=7,f=27)
+5   | Lab    | 4 | 5 | 9  | Hostel(g=9,f=9), Gym(g=4,f=10), Hall(g=7,f=27)
+6   | Hostel | 9 | 0 | 9  | goal reached
+Path: Gate -> Cafe -> Admin -> Hostel
+Returned cost: 9 | Cost added by hand: 9
+Processed nodes: ['Gate', 'Lib', 'Cafe', 'Admin', 'Lab', 'Hostel']
+Expanded nodes: ['Gate', 'Lib', 'Cafe', 'Admin', 'Lab']
+Expansion count: 5 | Stale entries skipped: 0
+
+EDGE CASES
+Start equals goal: ['Gate'] 0 expansions: 0
+Goal is Pool: ['Gate', 'Gym', 'Pool'] 6
+Start Pool, goal Hostel: None None
+
+SUMMARY
+Run                  | Path                            | Cost | Expansions
+A* given h           | Gate -> Cafe -> Admin -> Hostel | 9    | 5
+UCS h=0              | Gate -> Cafe -> Admin -> Hostel | 9    | 8
+A* h(Admin)=9        | Gate -> Lib -> Lab -> Hostel    | 10   | 6
+A* h(Hall)=20        | Gate -> Cafe -> Admin -> Hostel | 9    | 5
