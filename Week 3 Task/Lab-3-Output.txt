@@ -1,0 +1,67 @@
+TASK 1
+BFS trace: step | processed | path | queue after
+1 | A | ['A'] | ['B', 'C']
+2 | B | ['A', 'B'] | ['C', 'D', 'E']
+3 | C | ['A', 'C'] | ['D', 'E', 'F']
+4 | D | ['A', 'B', 'D'] | ['E', 'F']
+5 | E | ['A', 'B', 'E'] | ['F', 'G']
+6 | F | ['A', 'C', 'F'] | ['G']
+7 | G | ['A', 'B', 'E', 'G'] | []
+BFS path: ['A', 'B', 'E', 'G']
+BFS visit order: ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+DFS trace: step | processed | path | stack after
+1 | A | ['A'] | ['C', 'B']
+2 | B | ['A', 'B'] | ['C', 'E', 'D']
+3 | D | ['A', 'B', 'D'] | ['C', 'E']
+4 | E | ['A', 'B', 'E'] | ['C', 'G']
+5 | G | ['A', 'B', 'E', 'G'] | ['C']
+DFS path: ['A', 'B', 'E', 'G']
+DFS visit order: ['A', 'B', 'D', 'E', 'G']
+
+TASK 2
+DLS limit 1 ('CUTOFF', None)
+DLS limit 2 ('CUTOFF', None)
+DLS limit 3 ('FOUND', ['A', 'B', 'E', 'G'])
+DLS limit 4 ('FOUND', ['A', 'B', 'E', 'G'])
+IDDFS max depth 1
+  limit 0 CUTOFF None
+  limit 1 CUTOFF None
+  result: None limits tried: [0, 1]
+IDDFS max depth 2
+  limit 0 CUTOFF None
+  limit 1 CUTOFF None
+  limit 2 CUTOFF None
+  result: None limits tried: [0, 1, 2]
+IDDFS max depth 3
+  limit 0 CUTOFF None
+  limit 1 CUTOFF None
+  limit 2 CUTOFF None
+  limit 3 FOUND ['A', 'B', 'E', 'G']
+  result: ['A', 'B', 'E', 'G'] limits tried: [0, 1, 2, 3]
+IDDFS max depth 4
+  limit 0 CUTOFF None
+  limit 1 CUTOFF None
+  limit 2 CUTOFF None
+  limit 3 FOUND ['A', 'B', 'E', 'G']
+  result: ['A', 'B', 'E', 'G'] limits tried: [0, 1, 2, 3]
+
+TASK 3
+UCS path: ['A', 'B', 'E', 'G']
+UCS cost: 3
+UCS processing order: ['A', 'B', 'C', 'E', 'G']
+UCS cost checked again: 3
+BFS path: ['A', 'C', 'G']
+BFS cost: 12
+BFS processing order: ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+UCS hops: 3 BFS hops: 2
+
+EDGE CASES
+Start equals goal BFS: (['A'], ['A'])
+Start equals goal UCS: (['A'], 0, ['A'])
+Unreachable goal BFS: (None, ['F'])
+Unreachable goal DFS: (None, ['F'])
+Unreachable goal UCS: (None, None, ['F'])
+Cycle graph BFS: (['A', 'B', 'C', 'D'], ['A', 'B', 'C', 'D'])
+Cycle graph DFS: (['A', 'B', 'C', 'D'], ['A', 'B', 'C', 'D'])
+Cycle graph DLS limit 2: ('CUTOFF', None)
+Cycle graph DLS limit 3: ('FOUND', ['A', 'B', 'C', 'D'])
