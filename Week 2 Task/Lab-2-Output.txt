@@ -1,0 +1,26 @@
+REFLEX AGENT (no memory)
+Modes: ['COOL', 'COOL', 'IDLE', 'IDLE', 'IDLE', 'WARM', 'WARM', 'ECO', 'ECO', 'COOL']
+Readings that repeat the previous request: 5
+
+STATEFUL AGENT: main test
+Reading  1: 31 C, occupied | last=None  | target=COOL  | command sent
+Reading  2: 31 C, occupied | last=COOL  | target=COOL  | no command
+Reading  3: 26 C, occupied | last=COOL  | target=IDLE  | command sent
+Reading  4: 24 C, occupied | last=IDLE  | target=IDLE  | no command
+Reading  5: 20 C, occupied | last=IDLE  | target=IDLE  | no command
+Reading  6: 17 C, occupied | last=IDLE  | target=WARM  | command sent
+Reading  7: 17 C, occupied | last=WARM  | target=WARM  | no command
+Reading  8: 23 C, empty    | last=WARM  | target=ECO   | command sent
+Reading  9: 23 C, empty    | last=ECO   | target=ECO   | no command
+Reading 10: 28 C, occupied | last=ECO   | target=COOL  | command sent
+Commands sent: 5 of 10 readings
+
+STATEFUL AGENT: noisy readings around 26 C
+Reading  1: 25 C, occupied | last=None  | target=IDLE  | command sent
+Reading  2: 27 C, occupied | last=IDLE  | target=COOL  | command sent
+Reading  3: 26 C, occupied | last=COOL  | target=IDLE  | command sent
+Reading  4: 27 C, occupied | last=IDLE  | target=COOL  | command sent
+Reading  5: 26 C, occupied | last=COOL  | target=IDLE  | command sent
+Reading  6: 27 C, occupied | last=IDLE  | target=COOL  | command sent
+Commands sent: 6 of 6 readings
+
